@@ -1,0 +1,33 @@
+<script src="https://unpkg.com/ipfs/dist/index.js"></script>
+<script>
+const repoPath = 'ipfs-' + Math.random()
+const ipfs = new Ipfs({ repo: repoPath })
+ 
+ 
+ipfs.on('ready', () => {
+    const files = [
+    {
+        path: 'MrAddon.txt',
+        content: ipfs.types.Buffer.from('MrAddon Rocks', 'utf8')
+    }
+    ]
+ 
+    ipfs.files.add(files, function (err, files) {
+        //ipfsPath = files[0].hash;
+        log("Storing file MrAddon.txt on IPFS using Javascript. HASH:" + files[0].hash);
+        ipfsPath = files[0].hash
+        ipfs.files.cat(ipfsPath, function (err, file) {
+        if (err) {
+            throw err
+        }
+            log("Content of HASH retrieved from IPFS: " + file.toString('utf8'));
+        })
+    })
+     
+    const log = (line) => {
+        document.getElementById('output').appendChild(document.createTextNode(`${line}\r\n`))
+    }
+     
+     
+})
+</script>
